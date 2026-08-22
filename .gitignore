@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+ENV/
+.pytest_cache/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Flutter / Dart
+vulnlens_mobile/.dart_tool/
+vulnlens_mobile/.flutter-plugins
+vulnlens_mobile/.flutter-plugins-dependencies
+vulnlens_mobile/.packages
+vulnlens_mobile/build/
+vulnlens_mobile/.idea/
+vulnlens_mobile/*.iml
+vulnlens_mobile/android/.gradle/
+vulnlens_mobile/android/local.properties
+vulnlens_mobile/android/gradlew
+vulnlens_mobile/android/gradlew.bat
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

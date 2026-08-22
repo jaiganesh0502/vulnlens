@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexoraPay Cyber Risk Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-badge">
+        <span class="shield-icon">🛡️</span>
+        <div class="brand-titles">
+          <h1>NEXORAPAY <span class="badge-fictional">FICTIONAL DEMO ORGANISATION</span></h1>
+          <p class="subtitle">Cyber Risk Simulator &mdash; <em>See how vulnerability priority changes with context.</em></p>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="profile-selector-group">
+        <label for="appetite-select">Risk Appetite:</label>
+        <select id="appetite-select" class="styled-select">
+          <option value="Low" selected>LOW (Conservative)</option>
+          <option value="Medium">MEDIUM (Balanced)</option>
+          <option value="High">HIGH (Aggressive)</option>
+        </select>
+      </div>
+      <span class="badge-offline">⚡ 100% OFFLINE</span>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <button class="nav-btn active" data-tab="dashboard-tab">📊 Priority Dashboard</button>
+    <button class="nav-btn" data-tab="network-tab">🌐 Organisation Network</button>
+    <button class="nav-btn highlight-btn" data-tab="whatif-tab">🔬 [ WHAT IF? ] Simulator</button>
+    <button class="nav-btn" data-tab="education-tab">💡 Why Signals Exist</button>
+    <button class="nav-btn" data-tab="casestudy-tab">📜 Log4Shell Case Study</button>
+    <button class="nav-btn" data-tab="pipeline-tab">🧠 How Teams Think</button>
+    <button class="nav-btn bridge-btn" data-tab="bridge-tab">🚀 Transition to VulnLens</button>
+  </nav>
+
+  <main class="content-container">
+
+    <!-- TAB 1: DASHBOARD & TABLE -->
+    <section id="dashboard-tab" class="tab-pane active">
+      <!-- Org Snapshot Cards -->
+      <div class="snapshot-grid">
+        <div class="stat-card">
+          <div class="stat-label">Organisation</div>
+          <div class="stat-value">NexoraPay</div>
+          <div class="stat-sub">Digital Payments / FinTech</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Risk Appetite</div>
+          <div class="stat-value text-accent" id="snapshot-appetite">LOW</div>
+          <div class="stat-sub" id="snapshot-weights">CVSS 30% | KEV 35% | EPSS 20%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Critical Services</div>
+          <div class="stat-value text-red">3</div>
+          <div class="stat-sub">Crown-jewel payment assets</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Internet-Facing</div>
+          <div class="stat-value text-orange">3</div>
+          <div class="stat-sub">External attack surface</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Internal Network</div>
+          <div class="stat-value text-blue">3</div>
+          <div class="stat-sub">Segmented intranet assets</div>
+        </div>
+      </div>
+
+      <!-- Core Teaching Story Alert Box -->
+      <div class="concept-callout">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <strong>Key Cybersecurity Concept:</strong>
+          <span>CVSS measures <em>intrinsic technical severity</em>. Operational priority requires additional context: 
+          <code>Vulnerability Severity + Exploitation Signals (KEV/EPSS) + Asset Exposure + Business Criticality + Org Context = Operational Priority</code>.
+          Notice below how <strong>NXP-DEMO-001 (CVSS 9.8)</strong> ranks <em>lower</em> than weaponized <strong>NXP-DEMO-002 (CVSS 8.4)</strong> on the Payment Portal!</span>
+        </div>
+      </div>
+
+      <!-- Vulnerability Table Section -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Synthetic Vulnerability Prioritisation Table</h2>
+          <span class="panel-tag">Demo prioritisation model &mdash; not an industry standard</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="vuln-table">
+            <thead>
+              <tr>
+                <th>Vulnerability ID</th>
+                <th>Affected Product</th>
+                <th>CVSS Score</th>
+                <th>CISA KEV</th>
+                <th>EPSS</th>
+                <th>Affected Asset</th>
+                <th>Exposure</th>
+                <th>Criticality</th>
+                <th>Demo Priority</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="vuln-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Inspector Panel for Selected Scenario -->
+      <div id="inspector-card" class="panel detail-panel" style="display: none;">
+        <div class="panel-header">
+          <h3>Vulnerability Detail Inspector: <span id="detail-vuln-id" class="text-accent"></span></h3>
+          <button class="btn-secondary btn-sm" id="close-inspector-btn">✕ Close</button>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-col">
+            <h4>Technical Flaw Severity</h4>
+            <div class="metric-row">
+              <span class="metric-name">Affected Product:</span>
+              <span class="metric-val" id="detail-product"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">CVSS Base Score:</span>
+              <span class="metric-val text-bold" id="detail-cvss"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Technical Severity:</span>
+              <span class="metric-val badge-severity" id="detail-severity"></span>
+            </div>
+            <p class="metric-hint">CVSS measures intrinsic potential flaw severity under laboratory conditions.</p>
+          </div>
+
+          <div class="detail-col">
+            <h4>Threat Intelligence Signals</h4>
+            <div class="metric-row">
+              <span class="metric-name">CISA KEV Listed:</span>
+              <span class="metric-val" id="detail-kev"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">EPSS 30-Day Probability:</span>
+              <span class="metric-val" id="detail-epss"></span>
+            </div>
+            <p class="metric-hint">Signals active weaponization in the wild and forward-looking likelihood.</p>
+          </div>
+
+          <div class="detail-col">
+            <h4>Organisation Context</h4>
+            <div class="metric-row">
+              <span class="metric-name">Asset:</span>
+              <span class="metric-val" id="detail-asset"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Network Exposure:</span>
+              <span class="metric-val" id="detail-exposure"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Business Criticality:</span>
+              <span class="metric-val" id="detail-criticality"></span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Business Role:</span>
+              <span class="metric-val" id="detail-importance"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="why-this-rank-section">
+          <h4>WHY THIS RANK? &mdash; Mathematical Contribution Breakdown</h4>
+          <div class="breakdown-bars">
+            <div class="contrib-row">
+              <div class="contrib-label"><span>CVSS Technical Contribution (30%)</span><span id="bar-cvss-val"></span></div>
+              <div class="progress-track"><div class="progress-bar bar-cvss" id="bar-cvss"></div></div>
+            </div>
+            <div class="contrib-row">
+              <div class="contrib-label"><span>CISA KEV Threat Contribution (35%)</span><span id="bar-kev-val"></span></div>
+              <div class="progress-track"><div class="progress-bar bar-kev" id="bar-kev"></div></div>
+            </div>
+            <div class="contrib-row">
+              <div class="contrib-label"><span>EPSS Probability Contribution (20%)</span><span id="bar-epss-val"></span></div>
+              <div class="progress-track"><div class="progress-bar bar-epss" id="bar-epss"></div></div>
+            </div>
+            <div class="contrib-row">
+              <div class="contrib-label"><span>Network Exposure Contribution (10%)</span><span id="bar-exp-val"></span></div>
+              <div class="progress-track"><div class="progress-bar bar-exposure" id="bar-exp"></div></div>
+            </div>
+            <div class="contrib-row">
+              <div class="contrib-label"><span>Asset Criticality Contribution (5%)</span><span id="bar-crit-val"></span></div>
+              <div class="progress-track"><div class="progress-bar bar-crit" id="bar-crit"></div></div>
+            </div>
+          </div>
+
+          <div class="breakdown-summary">
+            <div class="total-score-box">
+              <span>Demo Prioritisation Score:</span>
+              <strong id="detail-total-score">93.4 / 100</strong>
+            </div>
+            <div class="total-priority-box">
+              <span>Operational Priority:</span>
+              <span class="badge-priority" id="detail-priority-badge">URGENT</span>
+            </div>
+            <button class="btn-primary" id="detail-whatif-btn">🔬 Test in [ WHAT IF? ]</button>
+          </div>
+          <div class="explanation-box" id="detail-explanation"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: ORGANISATION NETWORK VIEW -->
+    <section id="network-tab" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>NexoraPay Fictional Network Architecture</h2>
+          <span class="badge-fictional">Synthetic Topology &mdash; No Real Infrastructure</span>
+        </div>
+        <p class="panel-intro">
+          This architectural topology map visually separates external internet-facing perimeter services from internal, segmented core assets.
+        </p>
+
+        <div class="network-diagram-container">
+          <!-- Internet Tier -->
+          <div class="network-tier-header">
+            <div class="cloud-icon">☁️ PUBLIC INTERNET</div>
+          </div>
+          <div class="network-connector-vertical"></div>
+
+          <!-- Internet-Facing Tier -->
+          <div class="network-tier-title">INTERNET-FACING TIER (EXTERNAL BOUNDARY)</div>
+          <div class="asset-grid">
+            <div class="asset-card card-internet card-critical">
+              <div class="asset-icon">💳</div>
+              <div class="asset-name">Customer Payment Portal</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-ext">INTERNET-FACING</span>
+                <span class="badge-tag tag-crit">CRITICAL</span>
+              </div>
+              <p class="asset-role">Direct customer card and payment processing.</p>
+              <div class="asset-vuln-indicator">⚠️ Active Target: NXP-DEMO-002</div>
+            </div>
+
+            <div class="asset-card card-internet card-critical">
+              <div class="asset-icon">🛡️</div>
+              <div class="asset-name">Identity Provider</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-ext">INTERNET-FACING</span>
+                <span class="badge-tag tag-crit">CRITICAL</span>
+              </div>
+              <p class="asset-role">Single Sign-On (SSO) and authentication gateway.</p>
+              <div class="asset-vuln-indicator">⚠️ Active Target: NXP-DEMO-003</div>
+            </div>
+
+            <div class="asset-card card-internet card-critical">
+              <div class="asset-icon">⚡</div>
+              <div class="asset-name">Transaction API</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-ext">INTERNET-FACING</span>
+                <span class="badge-tag tag-crit">CRITICAL</span>
+              </div>
+              <p class="asset-role">High-throughput payment gateway settlement APIs.</p>
+              <div class="asset-vuln-indicator">🔒 Monitored</div>
+            </div>
+          </div>
+
+          <div class="network-connector-vertical"></div>
+          <div class="firewall-divider">
+            <span>🛡️ INTERNAL SECURITY BOUNDARY / FIREWALL</span>
+          </div>
+          <div class="network-connector-vertical"></div>
+
+          <!-- Internal Tier -->
+          <div class="network-tier-title">INTERNAL NETWORK TIER (SEGMENTED INTRANET)</div>
+          <div class="asset-grid">
+            <div class="asset-card card-internal card-high">
+              <div class="asset-icon">📁</div>
+              <div class="asset-name">Employee File Server</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-int">INTERNAL</span>
+                <span class="badge-tag tag-high">HIGH</span>
+              </div>
+              <p class="asset-role">Confidential internal documents repository.</p>
+              <div class="asset-vuln-indicator">⚠️ Active Target: NXP-DEMO-005</div>
+            </div>
+
+            <div class="asset-card card-internal card-normal">
+              <div class="asset-icon">📊</div>
+              <div class="asset-name">Internal Reporting Server</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-int">INTERNAL</span>
+                <span class="badge-tag tag-norm">NORMAL</span>
+              </div>
+              <p class="asset-role">End-of-day analytics and business metrics.</p>
+              <div class="asset-vuln-indicator">⚠️ Active Target: NXP-DEMO-001, 004</div>
+            </div>
+
+            <div class="asset-card card-internal card-normal">
+              <div class="asset-icon">💻</div>
+              <div class="asset-name">Development Server</div>
+              <div class="asset-badge-row">
+                <span class="badge-tag tag-int">INTERNAL</span>
+                <span class="badge-tag tag-norm">NORMAL</span>
+              </div>
+              <p class="asset-role">Staging sandbox and application development.</p>
+              <div class="asset-vuln-indicator">🔒 Sandbox Tier</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: WHAT-IF SIMULATOR -->
+    <section id="whatif-tab" class="tab-pane">
+      <div class="panel whatif-panel">
+        <div class="panel-header">
+          <h2>Interactive [ WHAT IF? ] Risk Simulation Workbench</h2>
+          <span class="panel-tag">Test how operational priority responds to contextual shifts</span>
+        </div>
+
+        <div class="whatif-layout">
+          <!-- Control Column -->
+          <div class="whatif-controls">
+            <h3>1. Select Baseline Scenario</h3>
+            <div class="form-group">
+              <label for="whatif-scenario-select">Target Vulnerability:</label>
+              <select id="whatif-scenario-select" class="styled-select">
+                <option value="NXP-DEMO-002" selected>NXP-DEMO-002 (Payment Gateway on Payment Portal)</option>
+                <option value="NXP-DEMO-001">NXP-DEMO-001 (Payment Gateway on Reporting Server)</option>
+                <option value="NXP-DEMO-003">NXP-DEMO-003 (Identity Component on IdP)</option>
+                <option value="NXP-DEMO-004">NXP-DEMO-004 (Analytics Platform on Reporting Server)</option>
+                <option value="NXP-DEMO-005">NXP-DEMO-005 (File Platform on File Server)</option>
+              </select>
+            </div>
+
+            <!-- Immutable CVSS Badge -->
+            <div class="immutable-cvss-callout">
+              <span class="lock-icon">🔒</span>
+              <div>
+                <strong>Technical CVSS Base Score: <span id="whatif-cvss-display">8.4</span> (IMMUTABLE)</strong>
+                <p>Technical flaw severity NEVER changes based on exposure or organizational context.</p>
+              </div>
+            </div>
+
+            <h3>2. Adjust Context Variables</h3>
+            <div class="form-group">
+              <label for="whatif-exposure-select">Network Exposure:</label>
+              <select id="whatif-exposure-select" class="styled-select">
+                <option value="Internet-facing">Internet-facing (External Boundary)</option>
+                <option value="Internal">Internal (Segmented Intranet)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="whatif-criticality-select">Asset Business Criticality:</label>
+              <select id="whatif-criticality-select" class="styled-select">
+                <option value="Critical">Critical (Crown Jewel / Mission-Critical)</option>
+                <option value="High">High (Confidential Operations)</option>
+                <option value="Normal">Normal (Internal Support)</option>
+                <option value="Low">Low (Isolated Non-essential)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="whatif-kev-select">CISA KEV (Known Exploited Status):</label>
+              <select id="whatif-kev-select" class="styled-select">
+                <option value="yes">YES (Confirmed In-The-Wild Exploitation)</option>
+                <option value="no">NO (No Active In-The-Wild Evidence)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="whatif-epss-slider">EPSS Exploitation Probability: <span id="epss-slider-val" class="text-bold">0.91</span></label>
+              <input type="range" id="whatif-epss-slider" min="0.01" max="0.99" step="0.01" value="0.91" class="styled-slider" />
+              <div class="slider-presets">
+                <button type="button" class="preset-btn" data-epss="0.91">High (0.91)</button>
+                <button type="button" class="preset-btn" data-epss="0.50">Med (0.50)</button>
+                <button type="button" class="preset-btn" data-epss="0.10">Low (0.10)</button>
+                <button type="button" class="preset-btn" data-epss="0.04">Min (0.04)</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="whatif-appetite-select">Organisation Risk Appetite Profile:</label>
+              <select id="whatif-appetite-select" class="styled-select">
+                <option value="Low">Low (Conservative &mdash; High KEV/EPSS weight)</option>
+                <option value="Medium">Medium (Balanced)</option>
+                <option value="High">High (CVSS-Heavy &mdash; 40% CVSS weight)</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn-secondary w-full" id="whatif-reset-btn">↺ Reset to Scenario Defaults</button>
+          </div>
+
+          <!-- Comparison Display Column -->
+          <div class="whatif-results">
+            <h3>3. Simulation Outcome: Before vs After</h3>
+
+            <div class="comparison-grid">
+              <!-- Before Card -->
+              <div class="compare-card before-card">
+                <div class="compare-badge">BEFORE</div>
+                <div class="compare-context" id="whatif-before-context">
+                  <div><strong>Exposure:</strong> Internet-facing</div>
+                  <div><strong>Criticality:</strong> Critical</div>
+                  <div><strong>KEV:</strong> YES | <strong>EPSS:</strong> 0.91</div>
+                </div>
+                <div class="compare-score-box">
+                  <div class="compare-score-num" id="whatif-before-score">93</div>
+                  <div class="compare-priority badge-priority" id="whatif-before-priority">URGENT</div>
+                </div>
+              </div>
+
+              <div class="compare-arrow">➔</div>
+
+              <!-- After Card -->
+              <div class="compare-card after-card">
+                <div class="compare-badge">AFTER</div>
+                <div class="compare-context" id="whatif-after-context">
+                  <div><strong>Exposure:</strong> Internal</div>
+                  <div><strong>Criticality:</strong> Normal</div>
+                  <div><strong>KEV:</strong> YES | <strong>EPSS:</strong> 0.91</div>
+                </div>
+                <div class="compare-score-box">
+                  <div class="compare-score-num" id="whatif-after-score">61</div>
+                  <div class="compare-priority badge-priority" id="whatif-after-priority">HIGH</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- What Changed Box -->
+            <div class="what-changed-panel">
+              <h4>WHAT CHANGED?</h4>
+              <ul class="change-list" id="whatif-changes-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+            <!-- Reasoning / Why Box -->
+            <div class="why-panel">
+              <h4>WHY DID THE OPERATIONAL PRIORITY CHANGE?</h4>
+              <ul class="why-list" id="whatif-why-list">
+                <!-- Dynamically populated -->
+              </ul>
+              <div class="conclusion-banner">
+                <strong>Crucial Takeaway:</strong>
+                <span>The technical CVSS score remained <strong id="conclusion-cvss">8.4</strong>. Technical flaw severity did not change; only operational triage priority changed because the organizational context changed.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: EDUCATIONAL SIGNALS -->
+    <section id="education-tab" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>WHY THESE SIGNALS EXIST</h2>
+          <span class="panel-tag">Defensive Telemetry Grounding</span>
+        </div>
+        <p class="panel-intro">
+          Vulnerability triage requires multiple independent telemetry signals. Each signal answers a fundamentally different defensive question:
+        </p>
+
+        <div class="edu-card-grid" id="edu-card-container">
+          <!-- Dynamically populated or static cards -->
+        </div>
+
+        <div class="edu-summary-box">
+          <h3>The Three Questions Security Leaders Must Answer:</h3>
+          <ol>
+            <li><strong>Is the flaw technically dangerous?</strong> &rarr; Answered by <strong>CVSS</strong></li>
+            <li><strong>Are adversaries actively exploiting it right now?</strong> &rarr; Answered by <strong>CISA KEV</strong></li>
+            <li><strong>Will adversaries likely exploit it soon?</strong> &rarr; Answered by <strong>EPSS</strong></li>
+            <li><strong>Can it hit our crown jewels?</strong> &rarr; Answered by <strong>Asset Exposure & Business Criticality</strong></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: LOG4SHELL CASE STUDY -->
+    <section id="casestudy-tab" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Real-World Defensive Case Study: Log4Shell</h2>
+          <span class="badge-severity badge-crit">CVE-2021-44228</span>
+        </div>
+
+        <div class="casestudy-grid">
+          <div class="casestudy-metrics">
+            <div class="cs-metric-card">
+              <span class="cs-lbl">Vulnerability:</span>
+              <span class="cs-val">Log4Shell (Apache Log4j)</span>
+            </div>
+            <div class="cs-metric-card">
+              <span class="cs-lbl">CVSS Base Score:</span>
+              <span class="cs-val text-red">10.0 (CRITICAL)</span>
+            </div>
+            <div class="cs-metric-card">
+              <span class="cs-lbl">CISA KEV Listed:</span>
+              <span class="cs-val text-red">YES (Active in wild)</span>
+            </div>
+            <div class="cs-metric-card">
+              <span class="cs-lbl">EPSS Probability:</span>
+              <span class="cs-val text-red">> 0.97 (Extreme)</span>
+            </div>
+          </div>
+
+          <div class="casestudy-narrative">
+            <h3>Defensive Prioritisation Analysis</h3>
+            <p>
+              <em>Log4Shell became a major defensive prioritisation event because of its technical severity and evidence of exploitation.</em>
+            </p>
+            <p>
+              When Log4Shell was disclosed in December 2021, almost every enterprise discovered hundreds of vulnerable Java components across their IT estates. Patching every single instance simultaneously was humanly impossible.
+            </p>
+            <p>
+              Defense teams that succeeded applied contextual prioritization:
+            </p>
+            <ul>
+              <li><strong>Hour 1-24:</strong> Patched internet-facing perimeter services (Identity, Portals, Gateways).</li>
+              <li><strong>Day 2-3:</strong> Patched mission-critical internal databases and payment pipelines.</li>
+              <li><strong>Week 2+:</strong> Remediated isolated internal developer sandboxes and offline reporting utilities.</li>
+            </ul>
+            <div class="official-sources-box">
+              <h4>Official Defensive References:</h4>
+              <div class="source-links">
+                <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" class="source-btn">🔗 CISA KEV Catalog</a>
+                <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-44228" target="_blank" class="source-btn">🔗 NIST NVD Entry</a>
+                <a href="https://www.first.org/epss" target="_blank" class="source-btn">🔗 FIRST EPSS SIG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: HOW SECURITY TEAMS THINK -->
+    <section id="pipeline-tab" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>HOW SECURITY TEAMS THINK</h2>
+          <span class="panel-tag">The Defensive Reasoning Pipeline</span>
+        </div>
+
+        <div class="pipeline-container">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Raw Vulnerability Information</h4>
+              <p>Thousands of newly disclosed CVEs published weekly across the global software ecosystem.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>CVSS Base Score</h4>
+              <p>Filters intrinsic technical severity (e.g. 0.0 - 10.0 scale).</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Threat Intelligence Signals</h4>
+              <p>Correlates active CISA KEV weaponization and predictive EPSS exploitation likelihood.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Asset Network Exposure</h4>
+              <p>Distinguishes internet-facing perimeter services from isolated internal subnets.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Business Criticality</h4>
+              <p>Identifies crown jewels (customer payments, authentication cores) vs non-essential dev servers.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>Risk Decision</h4>
+              <p>Applies organizational risk tolerance (Low, Medium, High risk appetite).</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow">↓</div>
+
+          <div class="pipeline-step final-step">
+            <div class="step-num">7</div>
+            <div class="step-content">
+              <h4>Actionable Remediation Priority</h4>
+              <p>Teams remediate the top 5 urgent risks first with zero alert fatigue.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-conclusion">
+          <p>"Professional vulnerability management does not normally mean sorting every CVE by CVSS alone."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: VULNLENS TRANSITION -->
+    <section id="bridge-tab" class="tab-pane">
+      <div class="bridge-hero-panel">
+        <div class="bridge-header">
+          <span class="bridge-tag">THE HACKATHON DEMO BRIDGE</span>
+          <h2>WE JUST DID THIS MANUALLY.</h2>
+        </div>
+
+        <div class="bridge-formula-card">
+          <div class="formula-row">
+            <span class="f-item">CVSS</span>
+            <span class="f-plus">+</span>
+            <span class="f-item">KEV</span>
+            <span class="f-plus">+</span>
+            <span class="f-item">EPSS</span>
+            <span class="f-plus">+</span>
+            <span class="f-item">EXPOSURE</span>
+            <span class="f-plus">+</span>
+            <span class="f-item">CRITICALITY</span>
+            <span class="f-plus">+</span>
+            <span class="f-item">ORGANISATIONAL CONTEXT</span>
+          </div>
+          <div class="formula-arrow">↓</div>
+          <div class="formula-result">OPERATIONAL PRIORITY DECISION</div>
+        </div>
+
+        <div class="bridge-pitch">
+          <p class="pitch-large">"Now imagine doing this for hundreds of vulnerabilities across thousands of assets."</p>
+          <p class="pitch-lead">"That's the problem <strong>VulnLens</strong> solves."</p>
+        </div>
+
+        <div class="bridge-action-area">
+          <button class="btn-vulnlens" id="introduce-vulnlens-btn">✨ [ INTRODUCE VULNLENS ]</button>
+        </div>
+
+        <!-- Hidden modal/view shown upon clicking Introduce VulnLens -->
+        <div id="vulnlens-intro-modal" class="vulnlens-modal" style="display: none;">
+          <div class="modal-content">
+            <h3>🛡️ Introducing VulnLens</h3>
+            <p class="modal-lead">Personalised Vulnerability Triage & Automated Reasoning Engine</p>
+            <div class="vulnlens-features">
+              <div class="vf-card">
+                <h4>🎯 Product Normalization & Matching</h4>
+                <p>Automatically correlates raw CPEs and vendor advisories against your exact software inventory.</p>
+              </div>
+              <div class="vf-card">
+                <h4>⚡ Multi-Signal Scoring Pipeline</h4>
+                <p>Ingests real-time CISA KEV and FIRST EPSS streams to compute deterministic priority scores.</p>
+              </div>
+              <div class="vf-card">
+                <h4>📄 Plain-Language Explainability</h4>
+                <p>Generates non-expert rationale cards and actionable remediation tickets in seconds.</p>
+              </div>
+            </div>
+            <p class="modal-footer-note"><em>The demo now transitions from the manual organisation simulator into the automated VulnLens engine!</em></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <span>NexoraPay Cyber Risk Simulator &mdash; Hackathon Opening Act</span>
+      <span>Fictional Educational Demo &bull; 100% Offline &bull; No Scanning / No Exploits</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

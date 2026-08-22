@@ -1,0 +1,70 @@
+name: VulnLens CI & Offline Android Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  python-tests:
+    name: Python Engine Test Suite (54 Tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Run Pytest Test Suite
+        run: |
+          pytest -v
+
+  flutter-tests-and-build:
+    name: Flutter Engine Tests & Offline APK Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Flutter Pub Get
+        working-directory: ./vulnlens_mobile
+        run: flutter pub get
+
+      - name: Run Flutter Tests
+        working-directory: ./vulnlens_mobile
+        run: flutter test
+
+      - name: Build Offline Release APK
+        working-directory: ./vulnlens_mobile
+        run: flutter build apk --release
+
+      - name: Upload VulnLens Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VulnLens-Release-APK
+          path: vulnlens_mobile/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
