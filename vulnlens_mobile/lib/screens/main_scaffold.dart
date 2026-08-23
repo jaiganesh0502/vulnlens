@@ -3,7 +3,6 @@ import '../theme/app_theme.dart';
 import 'calibration_screen.dart';
 import 'compare_screen.dart';
 import 'home_screen.dart';
-import 'judge_demo_screen.dart';
 import 'why_not_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -21,7 +20,6 @@ class _MainScaffoldState extends State<MainScaffold> {
     WhyNotScreen(),
     CompareScreen(),
     CalibrationScreen(),
-    JudgeDemoScreen(),
   ];
 
   @override
@@ -51,9 +49,9 @@ class _MainScaffoldState extends State<MainScaffold> {
           selectedItemColor: VulnLensColors.electricBlue,
           unselectedItemColor: VulnLensColors.textMuted,
           selectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+              const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+              const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.shield_outlined),
@@ -74,11 +72,6 @@ class _MainScaffoldState extends State<MainScaffold> {
               icon: Icon(Icons.tune_outlined),
               activeIcon: Icon(Icons.tune),
               label: 'Calibration',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.play_circle_outline),
-              activeIcon: Icon(Icons.play_circle_fill),
-              label: 'Judge Demo',
             ),
           ],
         ),

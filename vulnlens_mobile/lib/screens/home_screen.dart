@@ -321,10 +321,10 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: VulnLensColors.bgSecondary,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border(
           top: const BorderSide(color: VulnLensColors.borderSubtle, width: 1),
           right: const BorderSide(color: VulnLensColors.borderSubtle, width: 1),
@@ -333,9 +333,9 @@ class HomeScreen extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: VulnLensColors.blueGlow.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: VulnLensColors.blueGlow.withOpacity(0.18),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -344,83 +344,93 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Header Row
+            // Top Header Row: Rank + CVE ID (Left) & Priority Badge (Right)
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: VulnLensColors.bgPrimary,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: VulnLensColors.borderSubtle),
-                  ),
-                  child: Text(
-                    '#${result.rank}',
-                    style: const TextStyle(
-                      color: VulnLensColors.highlight,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: VulnLensColors.bgPrimary,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: VulnLensColors.borderSubtle),
+                      ),
+                      child: Text(
+                        '#${result.rank}',
+                        style: const TextStyle(
+                          color: VulnLensColors.highlight,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    Text(
+                      v.cveId,
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: VulnLensColors.electricBlue,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  v.cveId,
-                  style: const TextStyle(
-                    fontFamily: 'monospace',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: VulnLensColors.electricBlue,
-                  ),
-                ),
-                const Spacer(),
                 PriorityBadge(priority: result.priority, score: b.finalPriorityScore),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
             // Product Name
             Text(
               v.productName,
               style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
                 color: Colors.white,
+                letterSpacing: -0.2,
               ),
             ),
             const SizedBox(height: 4),
 
-            // Plain Language Title
+            // Plain Language Consequence Title
             Text(
               result.plainTitle,
               style: const TextStyle(
                 fontSize: 13,
                 color: VulnLensColors.textSecondary,
                 fontWeight: FontWeight.w500,
+                height: 1.35,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
-            // Contextual Priority Metrics Row
+            // 4-Box Contextual Priority Metrics Row
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               decoration: BoxDecoration(
                 color: VulnLensColors.bgPrimary,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: VulnLensColors.borderSubtle, width: 0.5),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: VulnLensColors.borderSubtle, width: 0.6),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildMetricCell('THREAT', b.technicalThreatScore.toStringAsFixed(1), Colors.white),
+                  Container(width: 1, height: 22, color: VulnLensColors.borderSubtle),
                   _buildMetricCell('CONTEXT', '×${b.contextMultiplier.toStringAsFixed(2)}', VulnLensColors.highlight),
+                  Container(width: 1, height: 22, color: VulnLensColors.borderSubtle),
                   _buildMetricCell('DELTA', '+${b.contextDelta.toStringAsFixed(1)}', VulnLensColors.lowGreen),
+                  Container(width: 1, height: 22, color: VulnLensColors.borderSubtle),
                   _buildMetricCell('PRIORITY', b.finalPriorityScore.toStringAsFixed(1), VulnLensColors.electricBlue),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
             // Technical Telemetry Chips Row
             Row(
@@ -448,32 +458,54 @@ class HomeScreen extends StatelessWidget {
                       ? VulnLensColors.urgentRed
                       : VulnLensColors.highlight,
                 ),
-                if (result.decisionMargin != null) ...[
-                  const Spacer(),
-                  Text(
-                    'Margin: +${result.decisionMargin} vs #${result.rank + 1}',
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontFamily: 'monospace',
-                      color: VulnLensColors.highlight,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
               ],
             ),
-            const SizedBox(height: 12),
 
-            // Bottom action row
+            // Dedicated Decision Margin Pill (if available)
+            if (result.decisionMargin != null) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF030E33),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0x440D7FFD)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.trending_up, size: 13, color: VulnLensColors.highlight),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Margin: +${result.decisionMargin} pts ahead of #${result.rank + 1}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontFamily: 'monospace',
+                        color: VulnLensColors.highlight,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 14),
+
+            // Bottom Action Row: Confidence on left, Button on right
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                       'Confidence: ',
                       style: TextStyle(
-                          fontSize: 12, color: VulnLensColors.textMuted),
+                        fontSize: 12,
+                        color: VulnLensColors.textMuted,
+                      ),
                     ),
                     Text(
                       result.confidence.label,
@@ -497,14 +529,17 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.analytics_outlined, size: 16),
-                  label: const Text('Why This Matters'),
+                  icon: const Icon(Icons.analytics_outlined, size: 15),
+                  label: const Text(
+                    'Why This Matters',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: VulnLensColors.electricBlue,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                        horizontal: 14, vertical: 8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
