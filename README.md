@@ -42,22 +42,23 @@ cd vulnlens_mobile && flutter test
 
 ---
 
-## 📱 Mobile APK Download & Offline Judge Protocol
+## 📱 Mobile App — Scan to Download & Offline Judge Protocol
 
-The native Android APK bundles all datasets and triage engines locally:
+Point your phone's camera at the QR code below. Scanning it will download the standalone `VulnLens-Demo.apk` directly to your mobile device:
 
-### Direct Download:
-Download the latest built APK from GitHub Releases / CI Artifacts:
-- **GitHub Repository:** [`https://github.com/jaiganesh0502/vulnlens`](https://github.com/jaiganesh0502/vulnlens)
-- **Automated CI/CD Builds:** [`https://github.com/jaiganesh0502/vulnlens/actions`](https://github.com/jaiganesh0502/vulnlens/actions)
+<div align="center">
+  <img src="assets/images/qr_download.png" width="200" alt="VulnLens QR Download" />
+  <p><strong>📸 Scan with phone camera to download APK directly</strong></p>
+</div>
 
-### Airplane Mode Offline Verification:
-1. **Install APK:** Install `VulnLens-Demo.apk` on Android phone or tablet.
-2. **Enable Airplane Mode:** Disable Wi-Fi and Mobile Data.
-3. **Switch Profiles:** Toggle between **Global Retail Bank** (`ORG-001`) and **Agile Cloud Startup** (`ORG-002`) to see priorities recalculate instantly in local RAM.
-4. **Inspect Decisions:** Tap **Why This Matters** on Card #1 to inspect the exact math ($100 \times \dots \times 1.44$).
-5. **Verify Negative Test:** Tap **Why Not?** to see why `CVE-2026-2678` (CVSS 9.9) is de-prioritized to Rank #60+ due to zero active exploitation.
-6. **Ingest Profile D:** Paste a new hospital profile (`ORG-004`) to generate a customized Top 5 without network calls.
+### ✈️ Airplane Mode Offline Verification:
+1. **Scan QR Code:** Open your phone camera, scan the code above, and download `VulnLens-Demo.apk`.
+2. **Install APK:** Open the downloaded file to install on your Android phone or tablet.
+3. **Enable Airplane Mode:** Disable Wi-Fi and Mobile Data to verify true 100% offline edge execution.
+4. **Switch Profiles:** Toggle between **Global Retail Bank** (`ORG-001`) and **Agile Cloud Startup** (`ORG-002`) to see priorities recalculate instantly in local RAM.
+5. **Inspect Decisions:** Tap **Why This Matters** on Card #1 to inspect the exact math ($100 \times \dots \times 1.44$).
+6. **Verify Negative Test:** Tap **Why Not?** to see why `CVE-2026-2678` (CVSS 9.9) is de-prioritized to Rank #60+ due to zero active exploitation.
+7. **Ingest Profile D:** Paste a new hospital profile (`ORG-004`) to generate a customized Top 5 without network calls.
 
 ---
 

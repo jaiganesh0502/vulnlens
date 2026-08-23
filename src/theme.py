@@ -65,6 +65,16 @@ def get_logo_base64() -> str:
     return ""
 
 
+def get_qr_code_base64() -> str:
+    """Read generated QR code image and return as base64 data URI."""
+    qr_path = Path("assets/images/qr_download.png")
+    if qr_path.exists():
+        data = qr_path.read_bytes()
+        encoded = base64.b64encode(data).decode("utf-8")
+        return f"data:image/png;base64,{encoded}"
+    return ""
+
+
 GLOBAL_CSS = compact_html("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap');

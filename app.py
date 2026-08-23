@@ -61,6 +61,7 @@ from src.theme import (
     render_hero_section,
     render_priority_badge,
     render_score_bar,
+    get_qr_code_base64,
 )
 
 
@@ -767,57 +768,47 @@ with tab7:
     render_html(
         """
         <div class="vl-card" style="border: 1px solid rgba(13, 127, 253, 0.4);">
-          <h2 class="vl-h2" style="margin-bottom: 4px;">📱 Standalone Offline Android Demo App</h2>
+          <h2 class="vl-h2" style="margin-bottom: 4px;">📱 Standalone Offline Android App (Scan to Download)</h2>
           <p style="color: #CBD5E1; font-size: 13px; margin: 0;">
-            Download and install the native Android APK. Toggle Airplane Mode and test 100% offline vulnerability prioritization.
+            Point your mobile camera at the QR code below to download the native Android APK directly to your phone.
           </p>
         </div>
         """
     )
 
+    qr_src = get_qr_code_base64()
+    qr_img_tag = (
+        f'<img src="{qr_src}" style="width: 220px; height: 220px; border-radius: 12px; padding: 12px; background: #FFFFFF; box-shadow: 0 8px 24px rgba(13, 127, 253, 0.35); margin: 0 auto 12px auto; display: block;" />'
+        if qr_src
+        else '<div style="width: 220px; height: 220px; background: #FFFFFF; border-radius: 12px; margin: 0 auto 12px auto;"></div>'
+    )
+
     render_html(
-        """
+        f"""
         <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 16px;">
           <div class="vl-card" style="flex: 1; min-width: 280px; text-align: center;">
-            <div style="font-family: monospace; font-size: 10px; line-height: 10px; white-space: pre; color: #93E2FC; margin-bottom: 12px;">
-+---------------------------------------------------------+
-|     ##############  ##    ######  ##############        |
-|     ##          ##  ##    ##  ##  ##          ##        |
-|     ##  ######  ##  ####  ##      ##  ######  ##        |
-|     ##  ######  ##  ##    ######  ##  ######  ##        |
-|     ##  ######  ##  ########  ##  ##  ######  ##        |
-|     ##          ##  ##    ####    ##          ##        |
-|     ##############  ##  ##  ##    ##############        |
-|                     ##########                          |
-|     ####  ########    ##########  ####  ######          |
-|     ######  ########  ##########  ########  ##          |
-|     ##  ######  ##  ####  ######  ####  ######          |
-|                     ######  ####  ##########            |
-|     ##############  ##  ########  ##  ##    ##          |
-|     ##          ##  ######  ##    ####  ######          |
-|     ##  ######  ##  ####  ####    ##  ##    ##          |
-|     ##  ######  ##    ########    ####  ######          |
-|     ##  ######  ##  ####    ####  ##  ##    ##          |
-|     ##          ##  ############  ####  ######          |
-|     ##############    ######  ##    ########            |
-+---------------------------------------------------------+
+            <div style="font-size: 13px; font-weight: 800; color: #0D7FFD; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;">
+              📸 SCAN WITH MOBILE CAMERA
             </div>
-            <a href="https://github.com/vulnlens/demo/releases/download/v1.0.0/VulnLens-Demo.apk" target="_blank" style="text-decoration: none;">
-              <button style="background: linear-gradient(135deg, #0D7FFD, #2358F9); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                ⬇️ Download VulnLens-Demo.apk
-              </button>
-            </a>
+            {qr_img_tag}
+            <div style="font-size: 12px; font-weight: 700; color: #93E2FC; margin-top: 8px;">
+              Point camera to download APK directly
+            </div>
+            <div style="font-size: 11px; color: #94A3B8; margin-top: 4px; word-break: break-all;">
+              Target: <code>VulnLens-Demo.apk</code>
+            </div>
           </div>
 
           <div class="vl-card" style="flex: 1.5; min-width: 320px;">
-            <div style="font-size: 14px; font-weight: 800; color: #FFFFFF; margin-bottom: 8px;">Offline Judge Verification Protocol</div>
-            <ol style="color: #CBD5E1; font-size: 12px; line-height: 1.6; padding-left: 18px;">
-              <li><strong>Download APK:</strong> Transfer or download <code>VulnLens-Demo.apk</code> to Android phone/tablet.</li>
-              <li><strong>Enable Airplane Mode:</strong> Turn off Wi-Fi and Mobile Data.</li>
-              <li><strong>Test Personalisation:</strong> Switch between Bank, Startup, and Utility.</li>
-              <li><strong>Inspect Decisions:</strong> Tap <em>Why This Matters</em> on Card #1 to view the exact math.</li>
+            <div style="font-size: 14px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">Offline Judge Verification Protocol</div>
+            <ol style="color: #CBD5E1; font-size: 12px; line-height: 1.8; padding-left: 18px; margin: 0;">
+              <li><strong>Scan QR Code:</strong> Open phone camera, scan the code to download <code>VulnLens-Demo.apk</code>.</li>
+              <li><strong>Install on Device:</strong> Open the downloaded file to install on your Android phone/tablet.</li>
+              <li><strong>Enable Airplane Mode:</strong> Turn off Wi-Fi and Mobile Data to verify 100% offline edge execution.</li>
+              <li><strong>Test Personalisation:</strong> Switch between Bank, Startup, and Utility profiles in local RAM.</li>
+              <li><strong>Inspect Decisions:</strong> Tap <em>Why This Matters</em> on Card #1 to inspect the exact signal math.</li>
               <li><strong>Verify Negative Test:</strong> Tap <em>Why Not?</em> to observe CVSS 9.9 deprioritized to #60+.</li>
-              <li><strong>Ingest Profile D:</strong> Paste custom hospital profile and triage immediately.</li>
+              <li><strong>Ingest Profile D:</strong> Paste custom hospital profile JSON to triage without network access.</li>
             </ol>
           </div>
         </div>
