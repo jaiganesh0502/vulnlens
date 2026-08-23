@@ -83,14 +83,6 @@ class VulnLensTheme {
           letterSpacing: 0.5,
         ),
       ),
-      cardTheme: CardThemeData(
-        color: VulnLensColors.bgSecondary,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: VulnLensColors.borderSubtle, width: 1),
-        ),
-      ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: VulnLensColors.bgSecondary,
         selectedItemColor: VulnLensColors.electricBlue,
@@ -115,13 +107,6 @@ class VulnLensTheme {
           foregroundColor: VulnLensColors.highlight,
           side: const BorderSide(color: VulnLensColors.borderSubtle),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      ),
-      dialogTheme: DialogThemeData(
-        backgroundColor: VulnLensColors.bgSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: VulnLensColors.borderSubtle),
         ),
       ),
       dividerTheme: const DividerThemeData(
