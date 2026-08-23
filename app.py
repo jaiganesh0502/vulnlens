@@ -7,15 +7,13 @@ Unified Global Brand & Design System:
   Emblem: Vibrant Blue #2358F9 -> Purple #4F3DF5
 """
 
-import importlib
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 import streamlit as st
 
-# Force reload of core modules to prevent stale class cache in running Streamlit server
 import src.models
 import src.matcher
 import src.scorer
@@ -23,14 +21,6 @@ import src.explainer
 import src.ranking
 import src.negative_test
 import src.theme
-
-importlib.reload(src.models)
-importlib.reload(src.matcher)
-importlib.reload(src.scorer)
-importlib.reload(src.explainer)
-importlib.reload(src.ranking)
-importlib.reload(src.negative_test)
-importlib.reload(src.theme)
 
 from src.calibration import evaluate_gold_set
 from src.comparison import compare_profiles
@@ -128,14 +118,17 @@ st.set_page_config(
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
 
+@st.cache_data(show_spinner=False)
 def get_cached_vulnerabilities() -> List[Vulnerability]:
     return load_vulnerabilities(Path("data/vulnerabilities.csv"))
 
 
+@st.cache_data(show_spinner=False)
 def get_cached_profiles() -> List[OrganizationProfile]:
     return load_profiles(Path("data/profiles.json"))
 
 
+@st.cache_data(show_spinner=False)
 def get_cached_gold_set() -> List[CalibrationRecord]:
     return load_gold_set(Path("data/gold_set.csv"))
 
@@ -150,7 +143,7 @@ if "selected_org_id" not in st.session_state:
 if "nav_section" not in st.session_state:
     st.session_state.nav_section = "▣ Command Centre"
 
-# Load datasets safely
+# Load datasets safely with caching
 try:
     vulnerabilities = get_cached_vulnerabilities()
     base_profiles = get_cached_profiles()
@@ -165,8 +158,13 @@ current_profile = profile_map.get(st.session_state.selected_org_id, all_profiles
 fingerprint = extract_fingerprint(current_profile)
 
 # Pre-compute Top 5 & All ranked findings
-top_5_results = rank_vulnerabilities(vulnerabilities, current_profile, top_n=5)
-all_ranked_results = rank_all_vulnerabilities(vulnerabilities, current_profile)
+@st.cache_data(show_spinner=False)
+def compute_triage_for_org(org_id: str, _vulns: List[Vulnerability], _prof: OrganizationProfile) -> Tuple[List[TriageResult], List[TriageResult]]:
+    t5 = rank_vulnerabilities(_vulns, _prof, top_n=5)
+    all_r = rank_all_vulnerabilities(_vulns, _prof)
+    return t5, all_r
+
+top_5_results, all_ranked_results = compute_triage_for_org(current_profile.org_id, vulnerabilities, current_profile)
 
 # Metrics calculation for KPI strip
 urgent_count = sum(1 for r in all_ranked_results if r.priority == PriorityLevel.URGENT)
@@ -618,7 +616,7 @@ elif nav_choice == "◉ Explain & Reasoning":
                 <div class="vl-card">
                   <div style="font-size: 11px; font-weight: 800; color: #10B981; text-transform: uppercase;">SIGNAL PROVENANCE</div>
                   <div style="margin-top: 8px; font-size: 12px; line-height: 1.6; color: #CBD5E1;">
-                    <div>• <strong>NVD CVSS:</strong> {v.cvss_base_score} ({v.cvss_version or 'v3.1'})</div>
+                    <div>• <strong>NVD CVSS:</strong> {v.cvss_base_score} ({getattr(v, 'cvss_version', 'v3.1')})</div>
                     <div>• <strong>CISA KEV:</strong> {'Listed in Known Exploited Vulnerabilities catalog' if v.cisa_kev else 'Not listed in active exploitation catalog'}</div>
                     <div>• <strong>FIRST EPSS:</strong> {((v.first_epss or 0.0)*100):.1f}% 30-day weaponization probability</div>
                     <div>• <strong>Confidence:</strong> <span style="color: #10B981; font-weight: 800;">{target_res.confidence.value}</span> ({target_res.confidence_reason})</div>
