@@ -59,35 +59,40 @@ class ScoreBreakdownWidget extends StatelessWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    breakdown.isCriticalProduct
-                        ? '⭐ Critical Core Asset Tier (×1.4 Multiplier)'
-                        : 'Standard Asset Tier (×1.0 Multiplier)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: breakdown.isCriticalProduct
-                          ? VulnLensColors.highlight
-                          : VulnLensColors.textSecondary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      breakdown.isCriticalProduct
+                          ? '⭐ Critical Core Asset Tier (×1.4 Multiplier)'
+                          : 'Standard Asset Tier (×1.0 Multiplier)',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: breakdown.isCriticalProduct
+                            ? VulnLensColors.highlight
+                            : VulnLensColors.textSecondary,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Base Score: ${breakdown.baseScore.toStringAsFixed(1)} pts',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: VulnLensColors.textMuted,
+                    const SizedBox(height: 2),
+                    Text(
+                      'Base Threat Score: ${breakdown.baseScore.toStringAsFixed(1)} pts',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: VulnLensColors.textMuted,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 breakdown.finalScore.toStringAsFixed(1),
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontFamily: 'monospace',
                   fontWeight: FontWeight.w900,
                   color: Colors.white,

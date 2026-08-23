@@ -165,46 +165,50 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          'Technical CVSS: ',
-                          style: TextStyle(fontSize: 11, color: VulnLensColors.textMuted),
-                        ),
-                        Text(
-                          '${v.cvssBaseScore?.toStringAsFixed(1) ?? "0.0"} → ${v.cvssBaseScore?.toStringAsFixed(1) ?? "0.0"}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'monospace',
-                            fontWeight: FontWeight.bold,
-                            color: VulnLensColors.highlight,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            'Technical CVSS: ',
+                            style: TextStyle(fontSize: 11, color: VulnLensColors.textMuted),
                           ),
+                          Text(
+                            '${v.cvssBaseScore?.toStringAsFixed(1) ?? "0.0"} → ${v.cvssBaseScore?.toStringAsFixed(1) ?? "0.0"}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'monospace',
+                              fontWeight: FontWeight.bold,
+                              color: VulnLensColors.highlight,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      const Text(
+                        '✓ Technical severity unchanged',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: VulnLensColors.lowGreen,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    const Text(
-                      '✓ Technical severity unchanged',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: VulnLensColors.lowGreen,
-                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                    const Text(
-                      '✓ Organisational context changed',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: VulnLensColors.electricBlue,
-                        fontWeight: FontWeight.w600,
+                      const Text(
+                        '✓ Context recalculates priority',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: VulnLensColors.electricBlue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                const SizedBox(width: 8),
                 PriorityBadge(
                   priority: simPriority,
                   score: simScore,
