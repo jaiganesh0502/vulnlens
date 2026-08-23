@@ -7,6 +7,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   python-tests:
     name: Python Engine Test Suite (54 Tests)
@@ -24,7 +27,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pytest
+          pip install -r requirements.txt
 
       - name: Run Pytest Test Suite
         run: |
@@ -33,6 +36,7 @@ jobs:
   flutter-tests-and-build:
     name: Flutter Engine Tests & Offline APK Build
     runs-on: ubuntu-latest
+    needs: python-tests
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -60,11 +64,32 @@ jobs:
 
       - name: Build Offline Release APK
         working-directory: ./vulnlens_mobile
-        run: flutter build apk --release
+        run: |
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/VulnLens-Demo.apk
 
       - name: Upload VulnLens Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: VulnLens-Release-APK
-          path: vulnlens_mobile/build/app/outputs/flutter-apk/app-release.apk
+          path: vulnlens_mobile/build/app/outputs/flutter-apk/VulnLens-Demo.apk
           if-no-files-found: error
+
+      - name: Create or Update GitHub Release (v1.0.0)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "VulnLens v1.0.0 — Standalone Offline Android Demo"
+          draft: false
+          prerelease: false
+          body: |
+            ## 🛡️ VulnLens Offline Android APK (v1.0.0)
+
+            Standalone offline Android application built for hackathon judge evaluation.
+
+            ### ✈️ Offline Verification:
+            1. Download and install `VulnLens-Demo.apk`.
+            2. Toggle **Airplane Mode** (disable Wi-Fi & Cellular).
+            3. Open **VulnLens** — the entire priority engine, bundled datasets (540+ CVEs), multi-org comparison, and negative test workflows execute 100% locally.
+          files: vulnlens_mobile/build/app/outputs/flutter-apk/VulnLens-Demo.apk
