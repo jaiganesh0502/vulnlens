@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/models.dart';
+import '../state/triage_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/priority_badge.dart';
-import 'home_screen.dart';
 
 class WhyNotScreen extends StatefulWidget {
   const WhyNotScreen({super.key});

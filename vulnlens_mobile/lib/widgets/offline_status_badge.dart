@@ -24,7 +24,7 @@ class OfflineStatusBadge extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: VulnLensColors.lowGreen.withValues(alpha: 0.6),
+                  color: VulnLensColors.lowGreen.withOpacity(0.6),
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),

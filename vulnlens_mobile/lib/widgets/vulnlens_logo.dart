@@ -22,7 +22,7 @@ class VulnLensLogo extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: VulnLensColors.emblemBlue.withValues(alpha: 0.45),
+            color: VulnLensColors.emblemBlue.withOpacity(0.45),
             blurRadius: size * 0.4,
             spreadRadius: 1,
           ),

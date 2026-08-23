@@ -83,7 +83,7 @@ class VulnLensTheme {
           letterSpacing: 0.5,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: VulnLensColors.bgSecondary,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -117,7 +117,7 @@ class VulnLensTheme {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: VulnLensColors.bgSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

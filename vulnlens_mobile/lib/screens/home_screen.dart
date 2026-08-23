@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../state/triage_state.dart';
+export '../state/triage_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/offline_status_badge.dart';
 import '../widgets/priority_badge.dart';
@@ -101,7 +102,7 @@ class HomeScreen extends StatelessWidget {
                 border: Border.all(color: VulnLensColors.borderSubtle),
                 boxShadow: [
                   BoxShadow(
-                    color: VulnLensColors.blueGlow.withValues(alpha: 0.3),
+                    color: VulnLensColors.blueGlow.withOpacity(0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -159,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                             color: VulnLensColors.electricBlue
-                                .withValues(alpha: 0.4)),
+                                .withOpacity(0.4)),
                       ),
                       child: DropdownButton<String>(
                         value: currentProfile?.orgId,
@@ -182,7 +183,7 @@ class HomeScreen extends StatelessWidget {
                         }).toList(),
                         onChanged: (newId) {
                           if (newId != null) {
-                            state.selectProfile(newId);
+                            state.selectProfileById(newId);
                           }
                         },
                       ),
@@ -332,7 +333,7 @@ class HomeScreen extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: VulnLensColors.blueGlow.withValues(alpha: 0.2),
+            color: VulnLensColors.blueGlow.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -582,7 +583,7 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: textCol.withValues(alpha: 0.3)),
+        border: Border.all(color: textCol.withOpacity(0.3)),
       ),
       child: Text(
         text,

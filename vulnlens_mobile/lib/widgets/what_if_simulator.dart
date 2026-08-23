@@ -59,10 +59,10 @@ class _WhatIfSimulatorState extends State<WhatIfSimulator> {
       decoration: BoxDecoration(
         color: VulnLensColors.bgSecondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: VulnLensColors.electricBlue.withValues(alpha: 0.4)),
+        border: Border.all(color: VulnLensColors.electricBlue.withOpacity(0.4)),
         boxShadow: [
           BoxShadow(
-            color: VulnLensColors.bgGlow.withValues(alpha: 0.5),
+            color: VulnLensColors.bgGlow.withOpacity(0.5),
             blurRadius: 16,
             spreadRadius: 2,
           ),

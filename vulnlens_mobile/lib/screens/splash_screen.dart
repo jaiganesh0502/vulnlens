@@ -56,7 +56,7 @@ class SplashScreen extends StatelessWidget {
                     border: Border.all(color: VulnLensColors.borderSubtle),
                     boxShadow: [
                       BoxShadow(
-                        color: VulnLensColors.blueGlow.withValues(alpha: 0.3),
+                        color: VulnLensColors.blueGlow.withOpacity(0.3),
                         blurRadius: 16,
                         spreadRadius: 2,
                       ),

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/calibration.dart';
 import '../services/comparison.dart';
@@ -92,6 +92,14 @@ class TriageState extends ChangeNotifier {
     }
   }
 
+  void selectProfileById(String orgId) {
+    final idx = _profiles.indexWhere((p) => p.orgId == orgId);
+    if (idx >= 0) {
+      _selectedProfileIndex = idx;
+      notifyListeners();
+    }
+  }
+
   void setCriticalMultiplier(double multiplier) {
     _criticalMultiplier = multiplier;
     notifyListeners();
@@ -100,7 +108,6 @@ class TriageState extends ChangeNotifier {
   bool addCustomProfile(String jsonString) {
     try {
       final profile = LoaderService.validateAndParseCustomProfile(jsonString);
-      // Check if orgId already exists, replace or add
       final existingIdx = _profiles.indexWhere((p) => p.orgId == profile.orgId);
       if (existingIdx >= 0) {
         _profiles[existingIdx] = profile;
@@ -128,5 +135,19 @@ class TriageState extends ChangeNotifier {
       targetField = 'practitioner_rank_startup';
     }
     return evaluateGoldSet(_goldRecords, profile, practitionerField: targetField);
+  }
+}
+
+class TriageScope extends InheritedNotifier<TriageState> {
+  const TriageScope({
+    super.key,
+    required TriageState super.notifier,
+    required super.child,
+  });
+
+  static TriageState of(BuildContext context) {
+    final scope = context.dependOnInheritedWidgetOfExactType<TriageScope>();
+    assert(scope != null, 'No TriageScope found in context');
+    return scope!.notifier!;
   }
 }

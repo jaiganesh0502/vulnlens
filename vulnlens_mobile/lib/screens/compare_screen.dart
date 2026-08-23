@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/models.dart';
+import '../state/triage_state.dart';
 import '../theme/app_theme.dart';
-import 'home_screen.dart';
 
 class CompareScreen extends StatefulWidget {
   const CompareScreen({super.key});
@@ -256,7 +255,7 @@ class _CompareScreenState extends State<CompareScreen> {
                 color: VulnLensColors.bgPrimary,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: VulnLensColors.electricBlue.withValues(alpha: 0.4)),
+                    color: VulnLensColors.electricBlue.withOpacity(0.4)),
               ),
               child: Text(
                 report.overallNarrative,
