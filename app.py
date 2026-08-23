@@ -22,6 +22,7 @@ import src.scorer
 import src.explainer
 import src.ranking
 import src.negative_test
+import src.theme
 
 importlib.reload(src.models)
 importlib.reload(src.matcher)
@@ -29,6 +30,7 @@ importlib.reload(src.scorer)
 importlib.reload(src.explainer)
 importlib.reload(src.ranking)
 importlib.reload(src.negative_test)
+importlib.reload(src.theme)
 
 from src.calibration import evaluate_gold_set
 from src.comparison import compare_profiles
@@ -167,8 +169,8 @@ top_5_results = rank_vulnerabilities(vulnerabilities, current_profile, top_n=5)
 all_ranked_results = rank_all_vulnerabilities(vulnerabilities, current_profile)
 
 # Metrics calculation for KPI strip
-urgent_count = sum(1 for r in all_ranked_results if r.priority == PriorityLevel.urgent)
-high_count = sum(1 for r in all_ranked_results if r.priority == PriorityLevel.high)
+urgent_count = sum(1 for r in all_ranked_results if r.priority == PriorityLevel.URGENT)
+high_count = sum(1 for r in all_ranked_results if r.priority == PriorityLevel.HIGH)
 med_low_count = len(all_ranked_results) - urgent_count - high_count
 
 # ==============================================================================
